@@ -37,11 +37,11 @@ int main(void)
     /* 使能 GPIOE GPIOD*/
     *RCC_AHB2_ENR |= (1 << 4) | (1 << 3);
     /* 配置 GPIOE9 工作模式 */
-    *GPIOE_MODER &= (0x01 << (9 * 2));   // 配置 PIN9 为输出模式
-    *GPIOE_OTYPER &= ~(0x01 << 9);       // 配置 PIN9 为推挽模式
-    *GPIOE_OSPEEDR |= (0x03 << (9 * 2)); // 配置 PIN9 输出速度为 最高
-    *GPIOE_PUPDR |= (0x01 << (9 * 2));   // 配置 PIN9 内部电阻上拉
-    *GPIOE_ODR |= LEDB_PIN;              //
+    // *GPIOE_MODER &= (0x01 << (9 * 2));   // 配置 PIN9 为输出模式
+    // *GPIOE_OTYPER &= ~(0x01 << 9);       // 配置 PIN9 为推挽模式
+    // *GPIOE_OSPEEDR |= (0x03 << (9 * 2)); // 配置 PIN9 输出速度为 最高
+    // *GPIOE_PUPDR |= (0x01 << (9 * 2));   // 配置 PIN9 内部电阻上拉
+    // *GPIOE_ODR |= LEDB_PIN;              //
     /* 配置 GPIO 工作模式 */
     *GPIOD_MODER &= (0x00 << (10 * 2)) | (0x00 << (9 * 2)); // 配置 PIN10 PIN9 为输入模式
     *GPIOD_OTYPER &= ~(0x1 << 10) | (0x1 << 9);             // 配置 PIN10 PIN9 为推挽模式
