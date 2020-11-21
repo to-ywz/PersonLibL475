@@ -1,7 +1,7 @@
 #ifndef BSP_GPIO_H_
 #define BSP_GPIO_H_
 
-#include "../User/Inc/stm32l475xx.h"
+#include "../../User/Inc/stm32l475xx.h"
 
 /** @addtogroup GPIO_pins GPIO pins
  * @{ 

@@ -9,22 +9,23 @@
  * 
  */
 
-#include "../BSP/bsp_gpio.h"
+#include "../BSP//inc/bsp_gpio.h"
 
-#define LEDB_PIN (0x1 << 9)
-#define LEDG_PIN (0x1 << 8)
-#define LEDR_PIN (0x1 << 7)
+#define LEDB_PIN        GPIO_PIN_9
+#define LEDG_PIN        GPIO_PIN_8
+#define LEDR_PIN        GPIO_PIN_7
 
-#define KEY0_PIN (0x1 << 10)
-#define KEY1_PIN (0x1 << 9)
-#define KEY2_PIN (0x1 << 8)
+#define KEY0_PIN        GPIO_PIN_10
+#define KEY1_PIN        GPIO_PIN_9
+#define KEY2_PIN        GPIO_PIN_8
+#define KEY_WEAKUP_PIN  GPIO_PIN_13
 
 void Delay(uint32_t ticks);
 
 int main(void)
 {
     /* 使能 GPIOE GPIOD*/
-    RCC->AHB2ENR |= (0x01 << 3) | (0x01 << 4);
+    RCC->AHB2ENR |= (0x01 << 3) | (0x01 << 4) | (0x01 << 2);
     /* 配置 GPIOE9 工作模式 */
     GPIOE->MODER &= (uint32_t)((0x01 << (7 * 2)) | (0x01 << (8 * 2)) | (0x01 << (9 * 2)));
     GPIOE->OTYPER &= ~(uint32_t)((1 << 7) | (1 << 8) | (1 << 9));
@@ -35,6 +36,10 @@ int main(void)
     GPIOD->MODER &= (uint32_t)((0x00 << (8 * 2)) | (0x00 << (9 * 2)) | (0x00 << (10 * 2)));
     GPIOE->OTYPER &= ~(uint32_t)((1 << 8) | (1 << 9) | (1 << 10));
     GPIOE->PUPDR |= (uint32_t)((0x01 << (8 * 2)) | (0x01 << (9 * 2)) | (0x01 << (10 * 2)));
+    /* 配置 GPIOC 工作模式 */
+    GPIOC->MODER &= (uint32_t)((0x00 << (13 * 2)));
+    GPIOC->OTYPER &= ~(uint32_t)((1 << 13));
+    GPIOC->PUPDR |= (uint32_t)((0x01 << (13 * 2)));
 
     while (1)
     {
@@ -70,6 +75,17 @@ int main(void)
             }
             GPIOE->ODR ^= LEDR_PIN;
             GPIOE->BSRR |= LEDB_PIN | LEDG_PIN;
+        }
+        if (KEY_WEAKUP_PIN == (GPIOC->IDR & KEY_WEAKUP_PIN))
+        {
+            Delay(100);
+            if (KEY_WEAKUP_PIN == (GPIOC->IDR & KEY_WEAKUP_PIN))
+            {
+                while (KEY_WEAKUP_PIN == (GPIOC->IDR & KEY_WEAKUP_PIN))
+                    ;
+            }
+            GPIOE->ODR &= ~LEDR_PIN;
+            GPIOE->ODR &= ~(LEDB_PIN | LEDG_PIN);
         }
     }
 
